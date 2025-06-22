@@ -1,0 +1,37 @@
+name: Run Artillery Load Test
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  load-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install Artillery
+        run: npm install -g artillery
+
+      - name: Run Artillery Test
+        run: artillery run artillery.yml -o results.json
+
+      - name: Generate Report
+        run: node scripts/generate-report.js
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: load-test-results
+          path: |
+            results.json
+            summary.txt
+            scripts/report.html
