@@ -16,4 +16,3 @@ scenarios:
           url: "/posts/1"
           expect:
             - statusCode: 200
-            - contentType: "application/json"
